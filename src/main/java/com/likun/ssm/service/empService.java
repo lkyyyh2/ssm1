@@ -16,7 +16,6 @@ public class empService {
     public PageInfo<Emp> getEmpList(Integer page){
         PageHelper.startPage(page,5);
         List<Emp> emps = empMapper.selectByExample(null);
-        System.out.println(111);
         return new PageInfo<Emp>(emps, 3);
     }
 }
