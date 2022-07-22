@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="https://cdn.bootcdn.net/ajax/libs/axios/1.0.0-alpha.1/axios.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.7.6/vue.js"></script>
+    <script type="text/javascript">
+        window.onload=function (){
+             let aaa=new Vue({
+                el:"#app",
+                data:{
+                    empList:[],
+                    PageInfo:""
+                },
+                methods:{
+                    getPage:function(page){
+                        axios({
+                            method: "GET",
+                            url:'http://localhost:8080/ssm/getList?page='+page,
+                        }).then(function (res){
+                            aaa.empList=res.data.list;
+                            aaa.PageInfo=res.data;
+                        })
+                    }
+                },
+                beforeMount(){
+                 this.getPage(1)
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<div id="app">
+    <table border="1px" cellspacing="0">
+        <tr >
+            <th>id</th>
+            <th>name</th>
+            <th>age</th>
+            <th>sex</th>
+            <th>email</th>
+        </tr>
+        <tr v-for="(item,index) in empList" :key="index" style="text-align: center">
+            <td>{{item.empId}}</td>
+            <td>{{item.empName}}</td>
+            <td>{{item.age}}</td>
+            <td>{{item.sex}}</td>
+            <td>{{item.email}}</td>
+        </tr>
+        <tr style="text-align: center">
+            <td colspan="5">
+                <button v-bind:disabled="PageInfo.isFirstPage" @click="getPage(1)">首页</button>
+                <button v-bind:disabled="PageInfo.isFirstPage"  @click="getPage(PageInfo.pageNum-1)">上一页</button>
+                <button v-for="(item,index) in PageInfo.navigatepageNums" :key="index"  @click="getPage(item)">{{item}}</button>
+                <button v-bind:disabled="PageInfo.isLastPage"  @click="getPage(PageInfo.pageNum+1)">下一页</button>
+                <button  v-bind:disabled="PageInfo.isLastPage" @click="getPage(PageInfo.pages)">末页</button>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
